@@ -27,8 +27,34 @@ const DUMMY_MEETUPS = [
   },
 ];
 
-const HomePage = () => {
-  return <MeetupList meetups={DUMMY_MEETUPS} />;
+const HomePage = (props) => {
+  // const [loadedMeetups, setLoadedMeetups] = useState([]);
+  // useEffect(() => {
+  //   setLoadedMeetups(DUMMY_MEETUPS);
+  // }, []);
+  return <MeetupList meetups={props.meetups} />;
 };
+
+export async function getStaticProps() {
+  return { props: { meetups: DUMMY_MEETUPS }, revalidate: 10 };
+}
+
+//can only be used in page components, if found, then executed during prerendering
+//executed b4 homepage execution
+//this can help to load data b4 Homepage is executed
+//all server code can be executed in this fn, wont be executed on client side.
+//always returns an object
+//this data can be outdated if props changes later,
+//reavalidate: takes time, after 10s, site is regenerated
+
+// export async function getServerSideProps(context) {
+//   const req = context.req;
+//   const res = context.res;
+//   return { props: { meetups: DUMMY_MEETUPS } };
+//} this recreates the page on every request, not once during build time or polling
+
+//context is received in both fns
+
+//if data doesnt change every second, then first is better,
 
 export default HomePage;
